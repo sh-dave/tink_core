@@ -82,7 +82,7 @@ class TypedError<T> {
   }
 
   public inline function toPromise<X>():Promise<X>
-    return Promise.lift((cast this:Error));
+    return Promise.reject(cast this);
 
   public function throwSelf():Dynamic
     return
@@ -109,6 +109,7 @@ class TypedError<T> {
   #if js
   static public inline function ofJsError(e:JsError, ?pos:Pos):Error
     return Error.withData(500, e.message, e, pos);
+  
   public function toJsError():JsError
     return switch Std.downcast(cast data, JsError) {
       case null: new TinkError(this);
